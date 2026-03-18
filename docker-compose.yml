@@ -1,0 +1,7 @@
+services:
+  app:
+    build: .
+    container_name: banking-app
+    ports:
+      - "8081:8081"
+    restart: unless-stopped

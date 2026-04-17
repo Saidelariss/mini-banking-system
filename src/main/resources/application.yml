@@ -1,0 +1,15 @@
+spring.application.name: mini-banking-system
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mini_bank_db
+    username: postgres
+    password: said1234
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 8082
+

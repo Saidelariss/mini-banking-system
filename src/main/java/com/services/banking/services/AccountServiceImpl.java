@@ -46,4 +46,11 @@ public class AccountServiceImpl implements AccountService {
         AccountEntity accountEntity = accountJpaRepository.findById(accountId).orElseThrow(() -> new FunctionalError("account with id " + accountId + " not found"));
         return modelMapper.map(accountEntity, AccountResponse.class);
     }
+
+    @Override
+    public List<AccountResponse> getAccountsByCustomerId(Integer customerId) {
+        CustomerEntity customerEntity = customerJpaRepository.findById(customerId)
+                .orElseThrow(() -> new FunctionalError("customer with id " + customerId + " not found"));
+        return customerEntity.getAccounts().stream().map(accountEntity -> modelMapper.map(accountEntity, AccountResponse.class)).toList();
+    }
 }

@@ -30,5 +30,8 @@ public class AccountApi {
         return accountService.getAccountById(accountId);
     }
 
-
+    @GetMapping("/{customerId}")
+    List<AccountResponse> getAccountsByCustomerId(@PathVariable Integer customerId){
+        return accountService.getAccountsByCustomerId(customerId);
+    }
 }

@@ -9,4 +9,5 @@ public interface AccountService {
     AccountResponse createAccount(CreateAccountRequest request);
     List<AccountResponse> getAllAccounts();
     AccountResponse getAccountById(Integer accountId);
+    List<AccountResponse> getAccountsByCustomerId(Integer customerId);
 }

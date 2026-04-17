@@ -5,6 +5,8 @@ import com.services.banking.dtos.response.AccountResponse;
 import com.services.banking.services.AccountService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,8 +23,8 @@ public class AccountApi {
     }
 
     @GetMapping
-    List<AccountResponse> getAllAccounts() {
-        return accountService.getAllAccounts();
+    Page<AccountResponse> getAllAccounts(Pageable pageable) {
+        return accountService.getAllAccounts(pageable);
     }
 
     @GetMapping("/{accountId}")

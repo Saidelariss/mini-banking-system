@@ -2,12 +2,14 @@ package com.services.banking.services;
 
 import com.services.banking.dtos.request.CreateAccountRequest;
 import com.services.banking.dtos.response.AccountResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface AccountService {
     AccountResponse createAccount(CreateAccountRequest request);
-    List<AccountResponse> getAllAccounts();
+    Page<AccountResponse> getAllAccounts(Pageable pageable);
     AccountResponse getAccountById(Integer accountId);
     List<AccountResponse> getAccountsByCustomerId(Integer customerId);
 }

@@ -10,6 +10,8 @@ import com.services.banking.persistence.repositories.CustomerJpaRepository;
 import com.services.banking.services.exceptions.FunctionalError;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,11 +36,10 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<AccountResponse> getAllAccounts() {
-        return accountJpaRepository.findAll()
-                .stream()
-                .map(accountEntity -> modelMapper.map(accountEntity, AccountResponse.class))
-                .toList();
+    public Page<AccountResponse> getAllAccounts(Pageable pageable) {
+        return accountJpaRepository.findAll(pageable)
+                .map(accountEntity -> modelMapper.map(accountEntity, AccountResponse.class));
+
     }
 
     @Override

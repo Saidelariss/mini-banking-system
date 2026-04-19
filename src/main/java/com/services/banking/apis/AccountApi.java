@@ -1,7 +1,9 @@
 package com.services.banking.apis;
 
 import com.services.banking.dtos.request.CreateAccountRequest;
+import com.services.banking.dtos.request.TransactionRequest;
 import com.services.banking.dtos.response.AccountResponse;
+import com.services.banking.dtos.response.TransactionResponse;
 import com.services.banking.services.AccountService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -33,7 +35,17 @@ public class AccountApi {
     }
 
     @GetMapping("/customer/{customerId}")
-    List<AccountResponse> getAccountsByCustomerId(@PathVariable Integer customerId){
+    List<AccountResponse> getAccountsByCustomerId(@PathVariable Integer customerId) {
         return accountService.getAccountsByCustomerId(customerId);
+    }
+
+    @PostMapping("/{accountId}/deposit")
+    TransactionResponse deposit(@PathVariable Integer accountId, @RequestBody @Valid TransactionRequest transactionRequest) {
+        return accountService.deposit(accountId, transactionRequest);
+    }
+
+    @PostMapping("/{accountId}/withdraw")
+    TransactionResponse withdraw(@PathVariable Integer accountId, @RequestBody @Valid TransactionRequest transactionRequest) {
+        return accountService.withdraw(accountId, transactionRequest);
     }
 }

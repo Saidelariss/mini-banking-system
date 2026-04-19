@@ -1,7 +1,9 @@
 package com.services.banking.services;
 
 import com.services.banking.dtos.request.CreateAccountRequest;
+import com.services.banking.dtos.request.TransactionRequest;
 import com.services.banking.dtos.response.AccountResponse;
+import com.services.banking.dtos.response.TransactionResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,4 +17,8 @@ public interface AccountService {
     AccountResponse getAccountById(Integer accountId);
 
     List<AccountResponse> getAccountsByCustomerId(Integer customerId);
+
+    TransactionResponse deposit(Integer accountId, TransactionRequest request);
+
+    TransactionResponse withdraw(Integer accountId, TransactionRequest request);
 }

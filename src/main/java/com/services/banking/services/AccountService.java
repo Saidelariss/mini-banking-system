@@ -9,7 +9,10 @@ import java.util.List;
 
 public interface AccountService {
     AccountResponse createAccount(CreateAccountRequest request);
+
     Page<AccountResponse> getAllAccounts(Pageable pageable);
+
     AccountResponse getAccountById(Integer accountId);
+
     List<AccountResponse> getAccountsByCustomerId(Integer customerId);
 }

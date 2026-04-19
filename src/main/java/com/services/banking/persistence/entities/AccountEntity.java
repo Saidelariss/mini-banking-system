@@ -25,6 +25,6 @@ public class AccountEntity extends AuditEntity {
     private AccountStatus status;
     private BigDecimal balance;
     private CurrencyCode currency;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private CustomerEntity customer;
 }

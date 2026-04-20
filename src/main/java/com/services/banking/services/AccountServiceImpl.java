@@ -1,7 +1,7 @@
 package com.services.banking.services;
 
-import com.services.banking.dtos.request.CreateAccountRequest;
 import com.services.banking.dtos.request.AmountRequest;
+import com.services.banking.dtos.request.CreateAccountRequest;
 import com.services.banking.dtos.response.AccountResponse;
 import com.services.banking.dtos.response.TransactionResponse;
 import com.services.banking.enums.AccountStatus;
@@ -74,7 +74,6 @@ public class AccountServiceImpl implements AccountService {
         AccountEntity accountEntity = getAccountEntity(accountId);
 
         accountEntity.setBalance(accountEntity.getBalance().add(request.getAmount()));
-        accountJpaRepository.save(accountEntity);
 
         TransactionEntity savedTransaction = saveTransaction(request, accountEntity, TransactionType.DEPOSIT);
         return modelMapper.map(savedTransaction, TransactionResponse.class);
@@ -82,13 +81,13 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public TransactionResponse withdraw(Integer accountId, AmountRequest request) {
         AccountEntity accountEntity = getAccountEntity(accountId);
 
         BigDecimal balance = validateSufficientBalance(request.getAmount(), accountEntity);
 
         accountEntity.setBalance(balance.subtract(request.getAmount()));
-        accountJpaRepository.save(accountEntity);
 
         TransactionEntity savedTransaction = saveTransaction(request, accountEntity, TransactionType.WITHDRAW);
         return modelMapper.map(savedTransaction, TransactionResponse.class);

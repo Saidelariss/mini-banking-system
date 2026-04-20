@@ -1,17 +1,17 @@
 package com.services.banking.dtos.response;
 
 import com.services.banking.enums.TransactionStatus;
-import com.services.banking.enums.TransactionType;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-public class TransactionResponse {
+@Builder
+public class TransferResponse {
     private Integer id;
     private String reference;
-    private TransactionType type;
     private TransactionStatus status;
     private BigDecimal amount;
     private String description;
@@ -19,3 +19,4 @@ public class TransactionResponse {
     private Integer sourceAccountId;
     private LocalDateTime createdAt;
 }
+

@@ -1,7 +1,7 @@
 package com.services.banking.services;
 
 import com.services.banking.dtos.request.CreateAccountRequest;
-import com.services.banking.dtos.request.TransactionRequest;
+import com.services.banking.dtos.request.AmountRequest;
 import com.services.banking.dtos.response.AccountResponse;
 import com.services.banking.dtos.response.TransactionResponse;
 import com.services.banking.enums.AccountStatus;
@@ -54,7 +54,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountResponse getAccountById(Integer accountId) {
-        AccountEntity accountEntity = accountJpaRepository.findById(accountId).orElseThrow(() -> new FunctionalError("account with id " + accountId + " not found"));
+        AccountEntity accountEntity = getAccountEntity(accountId);
         return modelMapper.map(accountEntity, AccountResponse.class);
     }
 
@@ -62,44 +62,60 @@ public class AccountServiceImpl implements AccountService {
     public List<AccountResponse> getAccountsByCustomerId(Integer customerId) {
         CustomerEntity customerEntity = customerJpaRepository.findById(customerId)
                 .orElseThrow(() -> new FunctionalError("customer with id " + customerId + " not found"));
-        return customerEntity.getAccounts().stream().map(accountEntity -> modelMapper.map(accountEntity, AccountResponse.class)).toList();
+        return customerEntity.getAccounts()
+                .stream()
+                .map(accountEntity -> modelMapper.map(accountEntity, AccountResponse.class))
+                .toList();
     }
 
     @Override
     @Transactional
-    public TransactionResponse deposit(Integer accountId, TransactionRequest request) {
-        AccountEntity accountEntity = accountJpaRepository.findById(accountId).orElseThrow(() -> new FunctionalError("account with id " + accountId + " not found"));
+    public TransactionResponse deposit(Integer accountId, AmountRequest request) {
+        AccountEntity accountEntity = getAccountEntity(accountId);
+
         accountEntity.setBalance(accountEntity.getBalance().add(request.getAmount()));
         accountJpaRepository.save(accountEntity);
-        TransactionEntity transactionEntity = new TransactionEntity();
-        transactionEntity.setReference(UUID.randomUUID().toString());
-        transactionEntity.setAmount(request.getAmount());
-        transactionEntity.setDescription(request.getDescription());
-        transactionEntity.setDestinationAccount(accountEntity);
-        transactionEntity.setStatus(TransactionStatus.SUCCESS);
-        transactionEntity.setType(TransactionType.DEPOSIT);
-        TransactionEntity savedTransaction = transactionJpaRepository.save(transactionEntity);
+
+        TransactionEntity savedTransaction = saveTransaction(request, accountEntity, TransactionType.DEPOSIT);
         return modelMapper.map(savedTransaction, TransactionResponse.class);
 
     }
 
     @Override
-    public TransactionResponse withdraw(Integer accountId, TransactionRequest request) {
-        AccountEntity accountEntity = accountJpaRepository.findById(accountId).orElseThrow(() -> new FunctionalError("account with id " + accountId + " not found"));
-        BigDecimal balance = accountEntity.getBalance();
-        if (balance.compareTo(request.getAmount()) < 0) {
-            throw new FunctionalError("balance insufficient");
-        }
+    public TransactionResponse withdraw(Integer accountId, AmountRequest request) {
+        AccountEntity accountEntity = getAccountEntity(accountId);
+
+        BigDecimal balance = validateSufficientBalance(request.getAmount(), accountEntity);
+
         accountEntity.setBalance(balance.subtract(request.getAmount()));
         accountJpaRepository.save(accountEntity);
+
+        TransactionEntity savedTransaction = saveTransaction(request, accountEntity, TransactionType.WITHDRAW);
+        return modelMapper.map(savedTransaction, TransactionResponse.class);
+    }
+
+    private AccountEntity getAccountEntity(Integer accountId) {
+        return accountJpaRepository.findById(accountId)
+                .orElseThrow(() -> new FunctionalError("account with id " + accountId + " not found"));
+    }
+
+
+    private TransactionEntity saveTransaction(AmountRequest request, AccountEntity accountEntity, TransactionType transactionType) {
         TransactionEntity transactionEntity = new TransactionEntity();
         transactionEntity.setReference(UUID.randomUUID().toString());
         transactionEntity.setAmount(request.getAmount());
         transactionEntity.setDescription(request.getDescription());
         transactionEntity.setDestinationAccount(accountEntity);
         transactionEntity.setStatus(TransactionStatus.SUCCESS);
-        transactionEntity.setType(TransactionType.WITHDRAW);
-        TransactionEntity savedTransaction = transactionJpaRepository.save(transactionEntity);
-        return modelMapper.map(savedTransaction, TransactionResponse.class);
+        transactionEntity.setType(transactionType);
+        return transactionJpaRepository.save(transactionEntity);
+    }
+
+    private static BigDecimal validateSufficientBalance(BigDecimal amount, AccountEntity accountEntity) {
+        BigDecimal balance = accountEntity.getBalance();
+        if (balance.compareTo(amount) < 0) {
+            throw new FunctionalError("balance insufficient");
+        }
+        return balance;
     }
 }

@@ -1,7 +1,7 @@
 package com.services.banking.apis;
 
 import com.services.banking.dtos.request.CreateAccountRequest;
-import com.services.banking.dtos.request.TransactionRequest;
+import com.services.banking.dtos.request.AmountRequest;
 import com.services.banking.dtos.response.AccountResponse;
 import com.services.banking.dtos.response.TransactionResponse;
 import com.services.banking.services.AccountService;
@@ -40,12 +40,12 @@ public class AccountApi {
     }
 
     @PostMapping("/{accountId}/deposit")
-    TransactionResponse deposit(@PathVariable Integer accountId, @RequestBody @Valid TransactionRequest transactionRequest) {
-        return accountService.deposit(accountId, transactionRequest);
+    TransactionResponse deposit(@PathVariable Integer accountId, @RequestBody @Valid AmountRequest amountRequest) {
+        return accountService.deposit(accountId, amountRequest);
     }
 
     @PostMapping("/{accountId}/withdraw")
-    TransactionResponse withdraw(@PathVariable Integer accountId, @RequestBody @Valid TransactionRequest transactionRequest) {
-        return accountService.withdraw(accountId, transactionRequest);
+    TransactionResponse withdraw(@PathVariable Integer accountId, @RequestBody @Valid AmountRequest amountRequest) {
+        return accountService.withdraw(accountId, amountRequest);
     }
 }

@@ -1,6 +1,7 @@
 package com.services.banking.apis;
 
 
+import com.services.banking.dtos.base.SearchTransactions;
 import com.services.banking.dtos.request.TransferRequest;
 import com.services.banking.dtos.response.TransferResponse;
 import com.services.banking.services.TransferService;
@@ -22,7 +23,12 @@ public class TransferApi {
     }
 
     @GetMapping
-    List<TransferResponse> getTransfers(){
+    List<TransferResponse> getTransfers() {
         return transferService.getAllTransfers();
+    }
+
+    @GetMapping("/search")
+    List<TransferResponse> getTransfersByCriteria(SearchTransactions searchTransactions) {
+        return transferService.getAllTransfers(searchTransactions);
     }
 }

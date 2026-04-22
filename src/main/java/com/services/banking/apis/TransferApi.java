@@ -6,10 +6,9 @@ import com.services.banking.dtos.response.TransferResponse;
 import com.services.banking.services.TransferService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -20,5 +19,10 @@ public class TransferApi {
     @PostMapping
     TransferResponse doTransfer(@RequestBody @Valid TransferRequest request) {
         return transferService.doTransfer(request);
+    }
+
+    @GetMapping
+    List<TransferResponse> getTransfers(){
+        return transferService.getAllTransfers();
     }
 }

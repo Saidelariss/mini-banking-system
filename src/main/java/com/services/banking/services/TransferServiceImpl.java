@@ -11,8 +11,10 @@ import com.services.banking.persistence.repositories.AccountJpaRepository;
 import com.services.banking.persistence.repositories.TransactionJpaRepository;
 import com.services.banking.services.exceptions.FunctionalError;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -21,6 +23,7 @@ public class TransferServiceImpl implements TransferService {
     private AccountService accountService;
     private AccountJpaRepository accountJpaRepository;
     private TransactionJpaRepository transactionJpaRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public TransferResponse doTransfer(TransferRequest request) {
@@ -34,6 +37,14 @@ public class TransferServiceImpl implements TransferService {
         TransactionEntity savedTransactionEntity = saveTransaction(amountRequest, sourceAccount, destinationAccount);
         return buildTransferResponse(savedTransactionEntity);
 
+
+    }
+
+    @Override
+    public List<TransferResponse> getAllTransfers() {
+        return transactionJpaRepository.findAll()
+                .stream()
+                .map(transactionEntity -> modelMapper.map(transactionEntity, TransferResponse.class)).toList();
 
     }
 

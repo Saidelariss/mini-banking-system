@@ -1,5 +1,6 @@
 package com.services.banking.apis;
 
+import com.services.banking.dtos.base.AccountSearchFilter;
 import com.services.banking.dtos.request.CreateAccountRequest;
 import com.services.banking.dtos.request.AmountRequest;
 import com.services.banking.dtos.response.AccountResponse;
@@ -47,5 +48,10 @@ public class AccountApi {
     @PostMapping("/{accountId}/withdraw")
     TransactionResponse withdraw(@PathVariable Integer accountId, @RequestBody @Valid AmountRequest amountRequest) {
         return accountService.withdraw(accountId, amountRequest);
+    }
+
+    @GetMapping("/search")
+    List<AccountResponse> getAccountsByCriteria(AccountSearchFilter filters){
+        return accountService.getAccountsByCriteria(filters);
     }
 }

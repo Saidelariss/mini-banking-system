@@ -1,10 +1,12 @@
 package com.services.banking.services;
 
+import com.services.banking.dtos.base.AccountSearchFilter;
 import com.services.banking.dtos.request.AmountRequest;
 import com.services.banking.dtos.request.CreateAccountRequest;
 import com.services.banking.dtos.response.AccountResponse;
 import com.services.banking.dtos.response.TransactionResponse;
 import com.services.banking.enums.AccountStatus;
+import com.services.banking.enums.AccountType;
 import com.services.banking.enums.TransactionStatus;
 import com.services.banking.enums.TransactionType;
 import com.services.banking.persistence.entities.AccountEntity;
@@ -14,11 +16,13 @@ import com.services.banking.persistence.repositories.AccountJpaRepository;
 import com.services.banking.persistence.repositories.CustomerJpaRepository;
 import com.services.banking.persistence.repositories.TransactionJpaRepository;
 import com.services.banking.services.exceptions.FunctionalError;
+import jakarta.persistence.criteria.Join;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -93,6 +97,51 @@ public class AccountServiceImpl implements AccountService {
         return modelMapper.map(savedTransaction, TransactionResponse.class);
     }
 
+    @Override
+    public List<AccountResponse> getAccountsByCriteria(AccountSearchFilter filters) {
+        Specification<AccountEntity> specification = null;
+        if(filters.getAccountNumber() != null) specification = and(specification,hasAccountNumber(filters.getAccountNumber()));
+        if(filters.getAccountType() != null) specification = and(specification,hasAccountType(filters.getAccountType()));
+        if(filters.getStatus() != null) specification = and(specification,hasStatus(filters.getStatus()));
+        if(filters.getCustomerFirstName() != null ) specification = and(specification,hasCustomerFirstName(filters.getCustomerFirstName()));
+
+        return accountJpaRepository.findAll(specification).stream()
+                .map(accountEntity -> modelMapper.map(accountEntity, AccountResponse.class))
+                .toList();
+
+    }
+
+    private Specification<AccountEntity> and(
+            Specification<AccountEntity> base,
+            Specification<AccountEntity> next
+    ){
+        return base == null ? next : base.and(next);
+    }
+    Specification<AccountEntity> hasAccountType(AccountType accountType){
+        return (root, query, cb)->
+                cb.equal(root.get("type"),accountType);
+    }
+
+    Specification<AccountEntity> hasStatus(AccountStatus status){
+        return (root, query, cb)->
+                cb.equal(root.get("status"),status);
+    }
+
+    Specification<AccountEntity> hasCustomerFirstName(String firstName){
+        return (root, query, cb) ->{
+            Join<AccountEntity,CustomerEntity> customerJoin = root.join("customer");
+            return cb.like(
+                    cb.lower(customerJoin.get("firstName")),
+                    "%"+firstName.toLowerCase()+"%"
+            );
+        };
+
+    }
+
+    Specification<AccountEntity> hasAccountNumber(String accountNumber){
+        return (root, query, cb) ->
+                    cb.equal(root.get("accountNumber"),accountNumber);
+    }
     private AccountEntity getAccountEntity(Integer accountId) {
         return accountJpaRepository.findById(accountId)
                 .orElseThrow(() -> new FunctionalError("account with id " + accountId + " not found"));

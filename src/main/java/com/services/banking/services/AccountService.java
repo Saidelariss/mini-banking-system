@@ -1,5 +1,6 @@
 package com.services.banking.services;
 
+import com.services.banking.dtos.base.AccountSearchFilter;
 import com.services.banking.dtos.request.CreateAccountRequest;
 import com.services.banking.dtos.request.AmountRequest;
 import com.services.banking.dtos.response.AccountResponse;
@@ -21,4 +22,6 @@ public interface AccountService {
     TransactionResponse deposit(Integer accountId, AmountRequest request);
 
     TransactionResponse withdraw(Integer accountId, AmountRequest request);
+
+    List<AccountResponse> getAccountsByCriteria(AccountSearchFilter filters);
 }

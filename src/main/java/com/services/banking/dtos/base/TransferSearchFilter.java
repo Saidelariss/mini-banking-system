@@ -7,7 +7,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class SearchTransactions {
+public class TransferSearchFilter {
     private Integer accountId;
     private TransactionType type;
     private TransactionStatus status;

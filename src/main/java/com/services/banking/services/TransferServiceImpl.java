@@ -1,6 +1,6 @@
 package com.services.banking.services;
 
-import com.services.banking.dtos.base.SearchTransactions;
+import com.services.banking.dtos.base.TransferSearchFilter;
 import com.services.banking.dtos.request.AmountRequest;
 import com.services.banking.dtos.request.TransferRequest;
 import com.services.banking.dtos.response.TransferResponse;
@@ -52,7 +52,7 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public List<TransferResponse> getAllTransfers(SearchTransactions filters) {
+    public List<TransferResponse> getAllTransfers(TransferSearchFilter filters) {
         Specification<TransactionEntity> specification = null;
         if (filters.getAccountId() != null) {
             specification = and(specification, belongsToAccountId(filters.getAccountId()));

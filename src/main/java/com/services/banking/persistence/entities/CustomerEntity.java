@@ -11,6 +11,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
+@Table(name = "customers")
 public class CustomerEntity extends AuditEntity {
     @Id
     @GeneratedValue

@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
+@Table(name = "transactions")
 public class TransactionEntity extends AuditEntity {
     @Id
     @GeneratedValue

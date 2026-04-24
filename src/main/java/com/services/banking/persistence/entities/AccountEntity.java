@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
+@Table(name = "accounts")
 public class AccountEntity extends AuditEntity {
     @Id
     @GeneratedValue
@@ -24,6 +25,7 @@ public class AccountEntity extends AuditEntity {
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
     private BigDecimal balance;
+    @Enumerated(EnumType.STRING)
     private CurrencyCode currency;
     @ManyToOne(fetch = FetchType.LAZY)
     private CustomerEntity customer;

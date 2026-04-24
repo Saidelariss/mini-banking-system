@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @Table(name = "accounts")
 public class AccountEntity extends AuditEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(nullable = false, unique = true)
     private String accountNumber;

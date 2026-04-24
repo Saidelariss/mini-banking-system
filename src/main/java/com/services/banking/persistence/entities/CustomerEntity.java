@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "customers")
 public class CustomerEntity extends AuditEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column(nullable = false)
     private String firstName;

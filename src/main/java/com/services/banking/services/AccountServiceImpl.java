@@ -17,13 +17,14 @@ import com.services.banking.persistence.repositories.CustomerJpaRepository;
 import com.services.banking.persistence.repositories.TransactionJpaRepository;
 import com.services.banking.services.exceptions.FunctionalError;
 import jakarta.persistence.criteria.Join;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;

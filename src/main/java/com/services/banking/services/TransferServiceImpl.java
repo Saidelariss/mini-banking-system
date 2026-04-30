@@ -36,7 +36,6 @@ public class TransferServiceImpl implements TransferService {
         AccountEntity destinationAccount = getAccountEntity(request.getDestinationAccountId());
         accountService.deposit(request.getDestinationAccountId(), amountRequest);
         accountService.withdraw(request.getSourceAccountId(), amountRequest);
-
         TransactionEntity savedTransactionEntity = saveTransaction(amountRequest, sourceAccount, destinationAccount);
         return buildTransferResponse(savedTransactionEntity);
 
@@ -137,6 +136,7 @@ public class TransferServiceImpl implements TransferService {
         transactionEntity.setSourceAccount(sourceAccount);
         transactionEntity.setStatus(TransactionStatus.SUCCESS);
         transactionEntity.setType(TransactionType.TRANSFER);
+
         return transactionJpaRepository.save(transactionEntity);
     }
 

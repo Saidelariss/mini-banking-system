@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -29,6 +30,7 @@ public class TransferServiceImpl implements TransferService {
     private final ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public TransferResponse doTransfer(TransferRequest request) {
         AmountRequest amountRequest = buildAmountRequest(request);
 
